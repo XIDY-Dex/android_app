@@ -22,13 +22,6 @@ public class PageFragment extends Fragment {
     public int getPageCounter() {
         return pageCounter;
     }
-    String[] textLabels = getActivity().getResources().getStringArray(R.array.labels);
-    String[] subTextLabels = getActivity().getResources().getStringArray(R.array.sub_labels);
-    Drawable image1 = getActivity().getResources().getDrawable(R.drawable.start_screen_first_img);
-    Drawable image2 = getActivity().getResources().getDrawable(R.drawable.start_screen_second_img);
-    Drawable image3 = getActivity().getResources().getDrawable(R.drawable.start_screen_third_image);
-
-    Drawable[] images = {image1, image2, image2};
 
     public PageFragment() {}
 
@@ -44,9 +37,6 @@ public class PageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pageCounter = getArguments() != null ? getArguments().getInt("num") : 1;
-        for(int i = 0; i < 3; i++) {
-            screens.add(new EnterScreenPart(textLabels[i], subTextLabels[i], images[i]));
-        }
     }
 
     @Override
@@ -57,6 +47,17 @@ public class PageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        String[] textLabels = getResources().getStringArray(R.array.labels);
+        String[] subTextLabels = getResources().getStringArray(R.array.sub_labels);
+        Drawable image1 = getResources().getDrawable(R.drawable.start_screen_first_img);
+        Drawable image2 = getResources().getDrawable(R.drawable.start_screen_second_img);
+        Drawable image3 = getResources().getDrawable(R.drawable.start_screen_third_image);
+
+        Drawable[] images = {image1, image2, image3};
+
+        for(int i = 0; i < 3; i++) {
+            screens.add(new EnterScreenPart(textLabels[i], subTextLabels[i], images[i]));
+        }
 
         TextView label, subLabel;
         ImageView labelImg;
