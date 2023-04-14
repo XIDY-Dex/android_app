@@ -17,7 +17,6 @@ import com.google.android.material.textfield.TextInputEditText;
 public class RegistrationActivity extends ComponentActivity {
     TextInputEditText emailInput;
     MaterialButton sendButton;
-    public static final int REQUEST_VIEW=1;
     SharedPreferences settings;
 
     @Override
@@ -26,6 +25,13 @@ public class RegistrationActivity extends ComponentActivity {
         setContentView(R.layout.activity_registration);
         emailInput = findViewById(R.id.textInputEditText);
         sendButton = findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), emailVerificationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         emailInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -46,27 +52,5 @@ public class RegistrationActivity extends ComponentActivity {
             @Override
             public void afterTextChanged(Editable editable) {}
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == REQUEST_VIEW && resultCode == RESULT_OK) {
-            settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean("PIN_CODE_ADDED", false);
-            Intent intent = new Intent(getApplicationContext(), pinCodeActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    public void OnClick(View view) {
-        switch(view.getId()) {
-            case R.id.sendButton:
-                Intent intent = new Intent(getApplicationContext(), emailVerificationActivity.class);
-                startActivityForResult(intent, REQUEST_VIEW);
-        }
     }
 }
