@@ -70,6 +70,8 @@ public class emailVerificationActivity extends ComponentActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                secondInput.setFocusable(true);
+                secondInput.requestFocus();
                 checkInput(numbers);
             }
         });
@@ -93,6 +95,8 @@ public class emailVerificationActivity extends ComponentActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                thirdInput.setFocusable(true);
+                thirdInput.requestFocus();
                 checkInput(numbers);
             }
         });
@@ -116,6 +120,8 @@ public class emailVerificationActivity extends ComponentActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                fourthInput.setFocusable(true);
+                fourthInput.requestFocus();
                 checkInput(numbers);
             }
         });
