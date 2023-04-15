@@ -8,8 +8,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -18,6 +20,7 @@ public class RegistrationActivity extends ComponentActivity {
     TextInputEditText emailInput;
     MaterialButton sendButton;
     SharedPreferences settings;
+    public Boolean RESULT=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +31,29 @@ public class RegistrationActivity extends ComponentActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), emailVerificationActivity.class);
-                startActivity(intent);
+                String email = emailInput.getText().toString();
+                Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            RESULT = sendTaskCode.handleResult(sendTaskCode.sendCode(email));
+                        }
+                        catch(Exception e) {
+                            Log.d("REQUEST", "REQUEST FAILED");
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                t.start();
+                if(RESULT) {
+                    Intent intent = new Intent(getApplicationContext(), emailVerificationActivity.class);
+                    intent.putExtra("EMAIL", emailInput.getText().toString());
+                    startActivity(intent);
+                }
+                else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Произошла ошибка при авторизации", Toast.LENGTH_LONG);
+                    toast.show();
+                }
             }
         });
 

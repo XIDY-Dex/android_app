@@ -22,15 +22,21 @@ public class MainActivity extends ComponentActivity {
             public void run() {
                 Intent intent;
                 settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
-                int status = settings.getInt("STATUS", 0);
-                if(status == 0) {
-                    intent = new Intent(getApplicationContext(), SecondActivity.class);
+                Boolean email_confirmed = settings.getBoolean("EMAIL_CONFIRMED", false);
+                if (email_confirmed) {
+                    Intent intentPin = new Intent(getApplicationContext(), pinCodeActivity.class);
+                    startActivity(intentPin);
+                    finish();
+                } else {
+                    int status = settings.getInt("STATUS", 0);
+                    if (status == 0) {
+                        intent = new Intent(getApplicationContext(), SecondActivity.class);
+                    } else {
+                        intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                    }
+                    startActivity(intent);
+                    finish();
                 }
-                else {
-                    intent = new Intent(getApplicationContext(), RegistrationActivity.class);
-                }
-                startActivity(intent);
-                finish();
             }
         }, 3000);
     }

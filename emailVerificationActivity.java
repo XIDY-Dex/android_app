@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
@@ -17,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,9 +28,11 @@ import java.util.Timer;
 import java.util.stream.IntStream;
 
 public class emailVerificationActivity extends ComponentActivity {
-    TextView secondsLeft;
+    TextView secondsLeft, labelText;
     MaterialButton resetButton;
     TextInputEditText firstInput, secondInput, thirdInput, fourthInput;
+    String email;
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,17 @@ public class emailVerificationActivity extends ComponentActivity {
         setContentView(R.layout.activity_email_verification);
         secondsLeft = findViewById(R.id.secondsLeft);
         resetButton = findViewById(R.id.resetButton);
+        labelText = findViewById(R.id.labelText);
         resetButton.setVisibility(View.INVISIBLE);
+        settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
         int[] numbers = {-1, -1, -1, -1};
         firstInput = findViewById(R.id.firstInput);
         secondInput = findViewById(R.id.secondInput);
         thirdInput = findViewById(R.id.thirdInput);
         fourthInput = findViewById(R.id.fourthInput);
+
+        Bundle arguments = getIntent().getExtras();
+        email = arguments.getString("EMAIL");
 
 
         firstInput.addTextChangedListener(new TextWatcher() {
@@ -153,8 +163,35 @@ public class emailVerificationActivity extends ComponentActivity {
     }
 
     public void checkInput(int[] numbers) {
+        String code = "";
+        for(int d: numbers) {
+            code += String.valueOf(d);
+        }
+
         if(!IntStream.of(numbers).anyMatch(x -> x == -1)) {
-            Log.d("INPUT", "PASSWORD");
+            String finalCode = code;
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    String token = checkCodeTask.handleResult(checkCodeTask.Authorize(email, finalCode));
+                    if(token != "Error") {
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("AUTH_TOKEN", token);
+                        editor.putBoolean("PIN_SET", false);
+                        editor.putBoolean("EMAIL_CONFIRMED", true);
+                        editor.apply();
+                        Intent intent = new Intent(getApplicationContext(), pinCodeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Произошла ошибка в процессе авторизации", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                }
+            };
+            t.start();
         }
     }
 }

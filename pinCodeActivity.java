@@ -1,10 +1,11 @@
 package com.example.worldskills;
 
+import androidx.activity.ComponentActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class pinCodeActivity extends AppCompatActivity {
+public class pinCodeActivity extends ComponentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
