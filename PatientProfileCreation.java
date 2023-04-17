@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +19,8 @@ import android.widget.Spinner;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Random;
 
 public class PatientProfileCreation extends ComponentActivity implements TextWatcher, AdapterView.OnItemSelectedListener, View.OnClickListener {
     TextInputEditText nameInput, surnameInput, middlenameInput, dateInput, sexInput;
@@ -89,7 +92,8 @@ public class PatientProfileCreation extends ComponentActivity implements TextWat
 
     @Override
     public void onClick(View view) {
-        PatientProfile patient = new PatientProfile(name, surname, middlename, date, sex);
+        Random random = new Random();
+        PatientProfile patient = new PatientProfile(random.nextInt(1000000), name, surname, middlename, date, sex);
         ContentValues cv = new ContentValues();
         cv.put(dbHelper.PROFILE_ID_COLUMN, patient.ID);
         cv.put(DbHelper.PROFILE_NAME_COLUMN, patient.Name);
@@ -102,6 +106,15 @@ public class PatientProfileCreation extends ComponentActivity implements TextWat
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("PROFILE_CREATED", true);
         editor.apply();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                String token = settings.getString("AUTH_TOKEN", "");
+                registerProfileTask.registerProfile(patient, token);
+            }
+        };
+        t.start();
         Intent intent = new Intent(this, MainPage.class);
         startActivity(intent);
         finish();

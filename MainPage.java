@@ -16,7 +16,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainPage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     AnalyzeFragment analyzeFragment = new AnalyzeFragment();
     ProfileFragment profileFragment = new ProfileFragment();
-    FragmentManager fragmentManager;
+    SupportFragment supportFragment = new SupportFragment();
+    ResultsFragment resultsFragment = new ResultsFragment();
     BottomNavigationView menu;
 
     @Override
@@ -33,11 +34,16 @@ public class MainPage extends AppCompatActivity implements BottomNavigationView.
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.analyzesBar:
+                analyzeFragment.updateNews();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentView, analyzeFragment).commit();
                 return true;
             case R.id.profileBar:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentView, profileFragment).commit();
                 return true;
+            case R.id.supportBar:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentView, supportFragment).commit();
+            case R.id.resultBar:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentView, resultsFragment).commit();
         }
         return false;
     }

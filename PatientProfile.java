@@ -5,20 +5,23 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 
 public class PatientProfile implements Serializable {
-    public static int ID = 0;
+    protected int ID;
     protected String Name;
     protected String Surname;
     protected String Middlename;
     protected String Date;
     protected String Sex;
 
-    public PatientProfile(String name, String surname, String middlename, String date, String sex) {
+    public PatientProfile(int id, String name, String surname, String middlename, String date, String sex) {
+        this.ID = id;
         this.Date = date;
         this.Surname = surname;
         this.Middlename = middlename;
         this.Sex = sex;
         this.Name = name;
     }
+
+    public PatientProfile() {}
 
     public int getID() {
         return ID;
@@ -66,9 +69,5 @@ public class PatientProfile implements Serializable {
 
     public void setName(String name) {
         Name = name;
-    }
-
-    public static void incrementIdCounter() {
-        ID++;
     }
 }

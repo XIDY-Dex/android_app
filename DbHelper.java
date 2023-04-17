@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME="app_db.sqlite3";
     public static final String PATIENT_PROFILES_TABLE="profiles";
-    public static final int SCHEMA_VERSION = 1;
+    public static final int SCHEMA_VERSION = 2;
     public static final String PROFILE_ID_COLUMN = "_id";
     public static final String PROFILE_NAME_COLUMN = "name";
     public static final String PROFILE_SURNAME_COLUMN = "surname";
